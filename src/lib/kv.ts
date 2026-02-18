@@ -2,7 +2,7 @@ import { Redis } from '@upstash/redis';
 
 // Simple in-memory KV for development/demo without credentials
 class MemoryKV {
-    private store = new Map<string, { value: any, expires: number }>();
+    private store = new Map<string, { value: string, expires: number }>();
 
     async setex(key: string, seconds: number, value: string) {
         this.store.set(key, {
@@ -41,7 +41,7 @@ const getKV = () => {
                 url: process.env.UPSTASH_REDIS_REST_URL,
                 token: process.env.UPSTASH_REDIS_REST_TOKEN,
             });
-        } catch (e) {
+        } catch {
             console.error("Redis init failed, falling back to memory");
         }
     }

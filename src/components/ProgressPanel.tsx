@@ -1,7 +1,6 @@
 import { useTransferStore } from "@/store/transfer";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatBytes } from "@/lib/utils"; // Wait, formatBytes doesn't exist in utils, I should add it or inline. I'll inline.
 
 function fmt(bytes: number) {
     if (bytes === 0) return '0 B';
@@ -12,11 +11,12 @@ function fmt(bytes: number) {
 }
 
 export function ProgressPanel() {
-    const { stats, status, manifest, error } = useTransferStore();
+    const { stats, status, manifest, error, role } = useTransferStore();
 
     if (!manifest) return null;
 
-    const percent = stats.bytesTotal > 0 ? (stats.bytesSent / stats.bytesTotal) * 100 : 0;
+    const currentBytes = role === 'receiver' ? stats.bytesRecv : stats.bytesSent;
+    const percent = manifest.fileSize > 0 ? (currentBytes / manifest.fileSize) * 100 : 0;
 
     return (
         <Card>
@@ -32,7 +32,7 @@ export function ProgressPanel() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p className="text-muted-foreground text-xs">Transferred</p>
-                        <p className="font-mono">{fmt(stats.bytesSent)} / {fmt(stats.bytesTotal)}</p>
+                        <p className="font-mono">{fmt(currentBytes)} / {fmt(manifest.fileSize)}</p>
                     </div>
                     <div>
                         <p className="text-muted-foreground text-xs">Speed</p>

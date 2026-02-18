@@ -94,7 +94,7 @@ export default function Home() {
             <ShieldCheck className="w-6 h-6" />
           </div>
           <h3 className="font-bold text-slate-800 mb-1">Integrity Verified</h3>
-          <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn't change.</p>
+          <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn&apos;t change.</p>
         </div>
       </div>
     </div>

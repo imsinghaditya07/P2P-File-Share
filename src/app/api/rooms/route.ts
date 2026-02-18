@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { kv } from '@/lib/kv';
 
 export const runtime = 'nodejs'; // Use nodejs for in-memory KV fallbacks
 
-export async function POST(req: NextRequest) {
+export async function POST() {
     try {
         const { nanoid } = await import('nanoid');
         const roomId = nanoid(10);

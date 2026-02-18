@@ -1,11 +1,11 @@
 import { SignalApi } from './signal-api';
-import { ChunkManifest, ChunkManifestSchema } from './schemas';
-import { verifyChunk, verifyFile } from './integrity';
+import { ChunkManifest } from './schemas';
+import { verifyChunk } from './integrity';
 
 export interface TransferStats {
     bytesSent: number;
+    bytesRecv: number;
     bytesTotal: number;
-    bytesRecv?: number; // Added bytesRecv optional
     speed: number;
     eta: number;
     startedAt: number;
@@ -21,7 +21,7 @@ export class PeerSender {
     private signalApi: SignalApi;
     private peerId: string;
     private roomId: string;
-    private stats: TransferStats = { bytesSent: 0, bytesTotal: 0, speed: 0, eta: 0, startedAt: 0 };
+    private stats: TransferStats = { bytesSent: 0, bytesRecv: 0, bytesTotal: 0, speed: 0, eta: 0, startedAt: 0 };
     private onProgress?: ProgressCallback;
     private aborted = false;
 
@@ -72,7 +72,7 @@ export class PeerSender {
                             }
                             const ice = await this.signalApi.getSignal(targetPeer, 'ice');
                             if (ice) {
-                                try { await this.pc.addIceCandidate(ice); } catch (e) { }
+                                try { await this.pc.addIceCandidate(ice); } catch { }
                             }
                         }, 1000);
                         resolve(undefined);
@@ -165,8 +165,8 @@ export class PeerReceiver {
     private onProgress?: ProgressCallback;
     private aborted = false;
     private receivedChunks = new Map<number, ArrayBuffer>();
-    public manifest?: ChunkManifest; // Make public
-    private stats: TransferStats = { bytesSent: 0, bytesTotal: 0, speed: 0, eta: 0, startedAt: 0 };
+    public manifest?: ChunkManifest;
+    private stats: TransferStats = { bytesSent: 0, bytesRecv: 0, bytesTotal: 0, speed: 0, eta: 0, startedAt: 0 };
 
     constructor(roomId: string, peerId: string, onProgress?: ProgressCallback) {
         this.roomId = roomId;
@@ -183,7 +183,7 @@ export class PeerReceiver {
         };
     }
 
-    async connect(): Promise<ChunkManifest | void> { // Fix return type
+    async connect(): Promise<void> {
         this.pc.onicecandidate = async (e) => {
             if (e.candidate) {
                 await this.signalApi.sendSignal('ice', e.candidate);
@@ -209,7 +209,7 @@ export class PeerReceiver {
                             }
                             const ice = await this.signalApi.getSignal(targetPeer, 'ice');
                             if (ice) {
-                                try { await this.pc.addIceCandidate(ice); } catch (e) { }
+                                try { await this.pc.addIceCandidate(ice); } catch { }
                             }
                         }, 1000);
                         resolve(undefined);
@@ -259,7 +259,7 @@ export class PeerReceiver {
 
             if (valid) {
                 this.receivedChunks.set(index, chunkData);
-                this.stats.bytesSent += size;
+                this.stats.bytesRecv += size; // Use bytesRecv
                 this.updateStats();
             } else {
                 console.error(`Chunk ${index} verification failed`);
@@ -290,11 +290,11 @@ export class PeerReceiver {
         const now = Date.now();
         const duration = (now - this.stats.startedAt) / 1000;
         if (duration > 0) {
-            this.stats.speed = this.stats.bytesSent / duration;
-            const remaining = this.stats.bytesTotal - this.stats.bytesSent;
+            this.stats.speed = this.stats.bytesRecv / duration; // Use bytesRecv
+            const remaining = this.stats.bytesTotal - this.stats.bytesRecv;
             this.stats.eta = remaining / (this.stats.speed || 1);
         }
-        this.onProgress({ ...this.stats, bytesRecv: this.stats.bytesSent });
+        this.onProgress({ ...this.stats });
     }
 
     close() {

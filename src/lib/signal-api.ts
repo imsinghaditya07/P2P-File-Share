@@ -1,11 +1,11 @@
-import { SignalMessage, Room } from './schemas';
+import { Room } from './schemas';
 
 const API_BASE = '/api';
 
 export class SignalApi {
     constructor(private roomId: string, private peerId: string) { }
 
-    async sendSignal(type: 'offer' | 'answer' | 'ice', payload: any) {
+    async sendSignal(type: 'offer' | 'answer' | 'ice', payload: unknown) {
         const res = await fetch(`${API_BASE}/signal`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

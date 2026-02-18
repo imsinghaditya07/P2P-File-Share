@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTransferStore } from '@/store/transfer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Send, File as FileIcon, UploadCloud } from 'lucide-react';
+import { Loader2, Send } from 'lucide-react';
 import { ChunkManifest } from '@/lib/schemas';
 
 export function DropZone() {
@@ -15,21 +15,7 @@ export function DropZone() {
     const setFile = useTransferStore((state) => state.setFile);
     const workerRef = useRef<Worker | null>(null);
 
-    const onDrop = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragOver(false);
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            processFile(e.dataTransfer.files[0]);
-        }
-    }, []);
-
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            processFile(e.target.files[0]);
-        }
-    };
-
-    const processFile = (file: File) => {
+    const processFile = useCallback((file: File) => {
         setProcessing(true);
         setProcessingProgress(0);
 
@@ -51,6 +37,20 @@ export function DropZone() {
             };
         }
         workerRef.current.postMessage({ file });
+    }, [setFile, setManifest]);
+
+    const onDrop = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragOver(false);
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            processFile(e.dataTransfer.files[0]);
+        }
+    }, [processFile]);
+
+    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            processFile(e.target.files[0]);
+        }
     };
 
     return (
@@ -69,7 +69,7 @@ export function DropZone() {
                     <div className="space-y-6 w-full max-w-xs">
                         <div className="relative w-20 h-20 mx-auto">
                             <Loader2 className="w-20 h-20 animate-spin text-blue-500 opacity-20 absolute inset-0" />
-                            <Loader2 className="w-20 h-20 animate-spin text-blue-600 absolute inset-0 style={{animationDuration: '3s'}}" />
+                            <Loader2 className="w-20 h-20 animate-spin text-blue-600 absolute inset-0" style={{ animationDuration: '3s' }} />
                             <div className="absolute inset-0 flex items-center justify-center font-bold text-blue-700">
                                 {Math.round(progress)}%
                             </div>
