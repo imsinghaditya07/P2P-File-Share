@@ -40,7 +40,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  # or your production URL
    npm install
    ```
 
-2. Run the development server:
+2. Run the development server (Zero Config):
+   *Note: If you don't provide Upstash credentials, the app will automatically fall back to in-memory storage. Perfect for local testing!*
    ```bash
    npm run dev
    ```
