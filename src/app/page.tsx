@@ -97,6 +97,14 @@ export default function Home() {
           <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn&apos;t change.</p>
         </div>
       </div>
+
+      {/* Version Footer */}
+      <div className="mt-12 text-center pb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 text-slate-400 text-xs font-medium border border-slate-100">
+          <ShieldCheck className="w-3 h-3" />
+          <span>Secure P2P Encrypted • v0.1.0</span>
+        </div>
+      </div>
     </div>
   );
 }
