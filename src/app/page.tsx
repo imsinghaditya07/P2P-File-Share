@@ -1,65 +1,102 @@
-import Image from "next/image";
+'use client';
+
+import { DropZone } from '@/components/DropZone';
+import { useTransferStore } from '@/store/transfer';
+import { SignalApi } from '@/lib/signal-api';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Loader2, ShieldCheck, Zap, Globe, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
+  const router = useRouter();
+  const { file, manifest } = useTransferStore();
+  const [creating, setCreating] = useState(false);
+
+  const createRoom = async () => {
+    if (!file || !manifest) return;
+    setCreating(true);
+    try {
+      const { roomId } = await SignalApi.createRoom();
+      router.push(`/room/${roomId}`);
+    } catch (error) {
+      console.error(error);
+      alert('Failed to create room. Check console.');
+      setCreating(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col items-center justify-center min-h-[80vh] py-10">
+
+      {/* Header */}
+      <div className="text-center mb-12 space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
+          <Zap className="w-3 h-3 fill-current" />
+          Vercel P2P Share
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">
+          Share Files <span className="text-blue-600">Instantly</span>
+        </h1>
+        <p className="text-lg text-slate-600 max-w-xl mx-auto">
+          Secure, direct peer-to-peer file transfer. No servers, no limits.
+          Works on your local network or across the internet.
+        </p>
+      </div>
+
+      {/* Main Action Area */}
+      <div className="w-full max-w-2xl bg-white/50 backdrop-blur-sm p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-white">
+        <DropZone />
+
+        {file && manifest && (
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="mb-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm flex items-center justify-between mx-auto max-w-md">
+              <div className="text-left">
+                <p className="text-sm font-bold text-slate-800 truncate max-w-[200px]">{file.name}</p>
+                <p className="text-xs text-slate-500">{(file.size / (1024 * 1024)).toFixed(2)} MB • {manifest.totalChunks} chunks</p>
+              </div>
+              <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5 text-green-600" />
+              </div>
+            </div>
+
+            <Button
+              onClick={createRoom}
+              disabled={creating}
+              size="lg"
+              className="w-full sm:w-auto min-w-[200px] h-14 text-lg rounded-full shadow-xl shadow-blue-500/20 bg-blue-600 hover:bg-blue-700"
+            >
+              {creating && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
+              {creating ? 'Creating Room...' : 'Start Transfer'}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Footer Features */}
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl px-4">
+        <div className="p-4">
+          <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-600">
+            <Globe className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold text-slate-800 mb-1">Direct P2P</h3>
+          <p className="text-sm text-slate-500">Data flows directly between devices. No intermediate servers.</p>
         </div>
-      </main>
+        <div className="p-4">
+          <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-purple-600">
+            <Lock className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold text-slate-800 mb-1">End-to-End Encrypted</h3>
+          <p className="text-sm text-slate-500">DTLS encryption ensures your files remain private and secure.</p>
+        </div>
+        <div className="p-4">
+          <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-green-600">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <h3 className="font-bold text-slate-800 mb-1">Integrity Verified</h3>
+          <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn't change.</p>
+        </div>
+      </div>
     </div>
   );
 }
