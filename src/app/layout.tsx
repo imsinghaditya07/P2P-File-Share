@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: 'Instant P2P file sharing directly in your browser.',
 }
 
+import { Navbar } from '@/components/Navbar'
+
 export default function RootLayout({
   children,
 }: {
@@ -32,6 +34,7 @@ export default function RootLayout({
         inter.variable,
         outfit.variable
       )}>
+        <Navbar />
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>

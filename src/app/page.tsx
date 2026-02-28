@@ -3,9 +3,10 @@
 import { DropZone } from '@/components/DropZone';
 import { useTransferStore } from '@/store/transfer';
 import { SignalApi } from '@/lib/signal-api';
+import { formatBytes } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2, ShieldCheck, Zap, Globe, Lock } from 'lucide-react';
+import { Loader2, ShieldCheck, Zap, Globe, Lock, FileUp, Link as LinkIcon, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
@@ -53,7 +54,7 @@ export default function Home() {
             <div className="mb-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm flex items-center justify-between mx-auto max-w-md">
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-800 truncate max-w-[200px]">{file.name}</p>
-                <p className="text-xs text-slate-500">{(file.size / (1024 * 1024)).toFixed(2)} MB • {manifest.totalChunks} chunks</p>
+                <p className="text-xs text-slate-500">{formatBytes(file.size)} • {manifest.totalChunks} chunks</p>
               </div>
               <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-green-600" />
@@ -95,6 +96,40 @@ export default function Home() {
           </div>
           <h3 className="font-bold text-slate-800 mb-1">Integrity Verified</h3>
           <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn&apos;t change.</p>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="mt-20 w-full max-w-4xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">How It Works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-slate-100 z-0 px-20">
+            <div className="w-full h-full bg-blue-100/50"></div>
+          </div>
+
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
+              <FileUp className="w-8 h-8 text-blue-500" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">1. Select File</h3>
+            <p className="text-slate-500 text-sm px-4">Choose any file from your device. It stays on your device until transfer completes.</p>
+          </div>
+
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
+              <LinkIcon className="w-8 h-8 text-indigo-500" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">2. Share Link</h3>
+            <p className="text-slate-500 text-sm px-4">Send the generated secure link or QR code to the recipient.</p>
+          </div>
+
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
+              <Download className="w-8 h-8 text-green-500" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">3. Auto Download</h3>
+            <p className="text-slate-500 text-sm px-4">Transfer starts instantly and saves securely to their device.</p>
+          </div>
         </div>
       </div>
 

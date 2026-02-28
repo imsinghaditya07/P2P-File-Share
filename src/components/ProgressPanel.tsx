@@ -2,13 +2,7 @@ import { useTransferStore } from "@/store/transfer";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-function fmt(bytes: number) {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+import { formatBytes } from "@/lib/utils";
 
 export function ProgressPanel() {
     const { stats, status, manifest, error, role } = useTransferStore();
@@ -32,11 +26,11 @@ export function ProgressPanel() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p className="text-muted-foreground text-xs">Transferred</p>
-                        <p className="font-mono">{fmt(currentBytes)} / {fmt(manifest.fileSize)}</p>
+                        <p className="font-mono">{formatBytes(currentBytes)} / {formatBytes(manifest.fileSize)}</p>
                     </div>
                     <div>
                         <p className="text-muted-foreground text-xs">Speed</p>
-                        <p className="font-mono">{fmt(stats.speed)}/s</p>
+                        <p className="font-mono">{formatBytes(stats.speed)}/s</p>
                     </div>
                     <div>
                         <p className="text-muted-foreground text-xs">ETA</p>
