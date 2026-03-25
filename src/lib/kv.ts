@@ -34,20 +34,20 @@ const globalForKV = globalThis as unknown as {
 }
 
 const getKV = () => {
-    // Only use Redis if BOTH vars are present and non-empty
-    if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    // Check for either Vercel KV or Upstash Redis credentials
+    const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+    if (url && token) {
         try {
-            return new Redis({
-                url: process.env.UPSTASH_REDIS_REST_URL,
-                token: process.env.UPSTASH_REDIS_REST_TOKEN,
-            });
+            return new Redis({ url, token });
         } catch {
             console.error("Redis init failed, falling back to memory");
         }
     }
 
     // Fallback
-    console.warn("⚠️ Using in-memory KV (Redis credentials missing). Works locally but not on Vercel.");
+    console.warn("⚠️ Using in-memory KV (Redis credentials missing). To fix on Vercel, attach a Vercel KV (free tier) in your dashboard.");
     if (!globalForKV.memoryKV) globalForKV.memoryKV = new MemoryKV();
     return globalForKV.memoryKV;
 };

@@ -6,7 +6,7 @@ import { SignalApi } from '@/lib/signal-api';
 import { formatBytes } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2, ShieldCheck, Zap, Globe, Lock, FileUp, Link as LinkIcon, Download } from 'lucide-react';
+import { Loader2, ShieldCheck, Globe, Lock, Cloud, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
@@ -28,116 +28,66 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] py-10">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] py-16">
 
       {/* Header */}
-      <div className="text-center mb-12 space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
-          <Zap className="w-3 h-3 fill-current" />
-          Vercel P2P Share
-        </div>
-        <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">
-          Share Files <span className="text-blue-600">Instantly</span>
+      <div className="text-center mb-10 space-y-4 px-4">
+        <h1 className="text-5xl md:text-7xl font-semibold text-slate-900 tracking-[-0.02em]">
+          iCloud <span className="text-blue-500">Drop</span>
         </h1>
-        <p className="text-lg text-slate-600 max-w-xl mx-auto">
+        <p className="text-[17px] md:text-xl text-slate-500 max-w-xl mx-auto font-light tracking-wide leading-relaxed">
           Secure, direct peer-to-peer file transfer. No servers, no limits.
-          Works on your local network or across the internet.
+          Works natively across your devices.
         </p>
       </div>
 
       {/* Main Action Area */}
-      <div className="w-full max-w-2xl bg-white/50 backdrop-blur-sm p-6 rounded-3xl shadow-xl shadow-slate-200/50 border border-white">
-        <DropZone />
+      <div className="w-full max-w-[640px] glass-panel p-2 sm:p-2 rounded-[36px] mx-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div className="bg-white/90 p-6 sm:p-8 rounded-[28px] shadow-sm">
+          <DropZone />
 
-        {file && manifest && (
-          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm flex items-center justify-between mx-auto max-w-md">
-              <div className="text-left">
-                <p className="text-sm font-bold text-slate-800 truncate max-w-[200px]">{file.name}</p>
-                <p className="text-xs text-slate-500">{formatBytes(file.size)} • {manifest.totalChunks} chunks</p>
+          {file && manifest && (
+            <div className="mt-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="mb-6 p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between mx-auto max-w-md transition-all">
+                <div className="text-left flex-1 min-w-0 pr-4">
+                  <p className="text-[15px] font-semibold text-slate-900 truncate">{file.name}</p>
+                  <p className="text-[13px] text-slate-500 mt-0.5">{formatBytes(file.size)}</p>
+                </div>
+                <div className="h-10 w-10 bg-green-50/80 rounded-full flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-green-600" />
+                </div>
               </div>
-              <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5 text-green-600" />
-              </div>
+
+              <Button
+                onClick={createRoom}
+                disabled={creating}
+                size="lg"
+                className="w-full sm:w-auto min-w-[200px] h-12 text-[15px] rounded-full shadow-md shadow-blue-500/10 bg-blue-500 hover:bg-blue-600 font-medium transition-all"
+              >
+                {creating && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                {creating ? 'Preparing...' : 'Start Transfer'}
+              </Button>
             </div>
-
-            <Button
-              onClick={createRoom}
-              disabled={creating}
-              size="lg"
-              className="w-full sm:w-auto min-w-[200px] h-14 text-lg rounded-full shadow-xl shadow-blue-500/20 bg-blue-600 hover:bg-blue-700"
-            >
-              {creating && <Loader2 className="w-5 h-5 animate-spin mr-2" />}
-              {creating ? 'Creating Room...' : 'Start Transfer'}
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Footer Features */}
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl px-4">
-        <div className="p-4">
-          <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-600">
-            <Globe className="w-6 h-6" />
-          </div>
-          <h3 className="font-bold text-slate-800 mb-1">Direct P2P</h3>
-          <p className="text-sm text-slate-500">Data flows directly between devices. No intermediate servers.</p>
+      <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-10 text-center max-w-4xl px-4 w-full">
+        <div className="flex flex-col items-center">
+          <Globe className="w-8 h-8 text-blue-500 mb-4 stroke-[1.5]" />
+          <h3 className="font-medium text-[17px] text-slate-900 mb-2">Direct P2P</h3>
+          <p className="text-[15px] text-slate-500 leading-relaxed font-light">Data flows directly between devices without intermediate servers.</p>
         </div>
-        <div className="p-4">
-          <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-purple-600">
-            <Lock className="w-6 h-6" />
-          </div>
-          <h3 className="font-bold text-slate-800 mb-1">End-to-End Encrypted</h3>
-          <p className="text-sm text-slate-500">DTLS encryption ensures your files remain private and secure.</p>
+        <div className="flex flex-col items-center">
+          <Lock className="w-8 h-8 text-slate-700 mb-4 stroke-[1.5]" />
+          <h3 className="font-medium text-[17px] text-slate-900 mb-2">Encrypted</h3>
+          <p className="text-[15px] text-slate-500 leading-relaxed font-light">Industry-standard encryption ensures your files remain private.</p>
         </div>
-        <div className="p-4">
-          <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-green-600">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <h3 className="font-bold text-slate-800 mb-1">Integrity Verified</h3>
-          <p className="text-sm text-slate-500">Automatic SHA-256 checksums guarantee file didn&apos;t change.</p>
-        </div>
-      </div>
-
-      {/* How It Works Section */}
-      <div className="mt-20 w-full max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">How It Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-slate-100 z-0 px-20">
-            <div className="w-full h-full bg-blue-100/50"></div>
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
-              <FileUp className="w-8 h-8 text-blue-500" />
-            </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">1. Select File</h3>
-            <p className="text-slate-500 text-sm px-4">Choose any file from your device. It stays on your device until transfer completes.</p>
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
-              <LinkIcon className="w-8 h-8 text-indigo-500" />
-            </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">2. Share Link</h3>
-            <p className="text-slate-500 text-sm px-4">Send the generated secure link or QR code to the recipient.</p>
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center mb-6">
-              <Download className="w-8 h-8 text-green-500" />
-            </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">3. Auto Download</h3>
-            <p className="text-slate-500 text-sm px-4">Transfer starts instantly and saves securely to their device.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Version Footer */}
-      <div className="mt-12 text-center pb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 text-slate-400 text-xs font-medium border border-slate-100">
-          <ShieldCheck className="w-3 h-3" />
-          <span>Secure P2P Encrypted • v0.1.0</span>
+        <div className="flex flex-col items-center">
+          <ShieldCheck className="w-8 h-8 text-green-500 mb-4 stroke-[1.5]" />
+          <h3 className="font-medium text-[17px] text-slate-900 mb-2">Verified</h3>
+          <p className="text-[15px] text-slate-500 leading-relaxed font-light">Automatic checksums guarantee files are delivered perfectly.</p>
         </div>
       </div>
     </div>

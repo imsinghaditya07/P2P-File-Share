@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useTransferStore } from '@/store/transfer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, Send } from 'lucide-react';
+import { Loader2, CloudUpload } from 'lucide-react';
 import { ChunkManifest } from '@/lib/schemas';
 
 export function DropZone() {
@@ -55,46 +55,47 @@ export function DropZone() {
 
     return (
         <Card
-            className={`border-dashed border-2 cursor-pointer transition-all duration-300 rounded-2xl shadow-sm ${isDragOver ? 'border-blue-500 bg-blue-50 ring-4 ring-blue-100' : 'border-slate-200 hover:border-blue-400 hover:shadow-md bg-white'
+            className={`border-0 cursor-pointer transition-all duration-300 rounded-[24px] shadow-none ${isDragOver ? 'bg-blue-50/50 ring-2 ring-blue-500/20' : 'bg-slate-50/50 hover:bg-slate-100/50'
                 }`}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={onDrop}
             onClick={() => document.getElementById('fileInput')?.click()}
         >
-            <CardContent className="flex flex-col items-center justify-center p-12 text-center min-h-[320px]">
+            <CardContent className="flex flex-col items-center justify-center p-12 text-center min-h-[300px]">
                 <input type="file" id="fileInput" className="hidden" onChange={onFileChange} />
 
                 {processing ? (
                     <div className="space-y-6 w-full max-w-xs">
                         <div className="relative w-20 h-20 mx-auto">
                             <Loader2 className="w-20 h-20 animate-spin text-blue-500 opacity-20 absolute inset-0" />
-                            <Loader2 className="w-20 h-20 animate-spin text-blue-600 absolute inset-0" style={{ animationDuration: '3s' }} />
-                            <div className="absolute inset-0 flex items-center justify-center font-bold text-blue-700">
+                            <Loader2 className="w-20 h-20 animate-spin text-blue-500 absolute inset-0" style={{ animationDuration: '3s' }} />
+                            <div className="absolute inset-0 flex items-center justify-center font-medium text-slate-800 text-sm">
                                 {Math.round(progress)}%
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="font-bold text-slate-700">Analyzing File...</h3>
-                            <p className="text-sm text-slate-500">Preparing encryption & chunks</p>
+                        <div className="space-y-1">
+                            <h3 className="font-medium text-[17px] text-slate-900">Preparing File...</h3>
+                            <p className="text-[13px] text-slate-500 font-light">Optimizing and securing chunks</p>
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-6 group">
-                        <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                            <Send className="w-10 h-10 text-blue-600 ml-1.5" />
+                    <div className="space-y-7 group">
+                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto group-hover:scale-105 transition-transform duration-500 shadow-[0_4px_20px_rgb(0,0,0,0.05)] border border-slate-100">
+                            <CloudUpload className="w-10 h-10 text-blue-500 stroke-[1.5]" />
                         </div>
                         <div>
-                            <h3 className="text-2xl font-bold text-slate-800 mb-2">Send Files</h3>
-                            <p className="text-slate-500 max-w-sm mx-auto leading-relaxed">
-                                Drag & drop files or click to browse.<br />
-                                <span className="text-xs font-medium text-blue-500 bg-blue-50 px-2 py-1 rounded-full mt-2 inline-block">
-                                    No Size Limit • Direct P2P • Encrypted
+                            <h3 className="text-[22px] font-semibold text-slate-900 mb-2">Upload File</h3>
+                            <p className="text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed font-light">
+                                Drag & drop any file here, or click to browse.
+                                <br />
+                                <span className="text-[13px] text-slate-400 mt-2 inline-block">
+                                    Directly transfers from your device securely.
                                 </span>
                             </p>
                         </div>
-                        <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 rounded-full px-8 font-bold tracking-wide">
-                            Select File
+                        <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white rounded-full px-8 text-[15px] font-medium transition-all shadow-md">
+                            Browse Files
                         </Button>
                     </div>
                 )}

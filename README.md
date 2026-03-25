@@ -14,22 +14,23 @@ Files transfer directly peer-to-peer via WebRTC DataChannels. Vercel handles onl
 
 ## Live Demo
 
-[Deploy to Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyour-username%2Fp2p-share&env=UPSTASH_REDIS_REST_URL,UPSTASH_REDIS_REST_TOKEN,NEXT_PUBLIC_APP_URL)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fimsinghaditya07%2FP2P-File-Share&env=KV_REST_API_URL,KV_REST_API_TOKEN,NEXT_PUBLIC_APP_URL)
 
 ## Setup
 
 ### Prerequisites
 
 - Node.js 18+
-- An Upstash Redis database (free tier)
+- (Optional) A Vercel KV or Upstash Redis database (free tier) for production
 
 ### Environment Variables
 
-Copy `.env.local.example` to `.env.local` and fill in:
+Copy `.env.local.example` to `.env.local` and optionally fill in:
 
 ```bash
-UPSTASH_REDIS_REST_URL=https://...
-UPSTASH_REDIS_REST_TOKEN=...
+# Set either Vercel KV or Upstash Redis credentials
+KV_REST_API_URL=https://...
+KV_REST_API_TOKEN=...
 NEXT_PUBLIC_APP_URL=http://localhost:3000  # or your production URL
 ```
 
@@ -41,23 +42,25 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  # or your production URL
    ```
 
 2. Run the development server (Zero Config):
-   *Note: If you don't provide Upstash credentials, the app will automatically fall back to in-memory storage. Perfect for local testing!*
+   *Note: If you don't provide KV credentials, the app will automatically fall back to in-memory storage. Perfect for local testing!*
    ```bash
    npm run dev
    ```
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deployment
+## Deployment 🚀 (Vercel Ready & 100% Free)
 
-1. Push to GitHub.
-2. Import project in Vercel.
-3. Add the environment variables from Upstash.
-4. Deploy!
+This project is perfectly optimized for Vercel's free Hobby Tier.
+
+1. **Push your code to GitHub.**
+2. **Import the project in Vercel:** Go to Vercel dashboard and add the repository.
+3. **Add Storage:** Navigate to the "Storage" tab in your Vercel project dashboard, create a new **Vercel KV**, and connect it to your project. This completely handles the Redis environment variables automatically (`KV_REST_API_URL`, `KV_REST_API_TOKEN`).
+4. **Deploy!**
 
 ## Architecture
 
-See [App Architecture](./src/app/page.tsx) or run the app to see the detailed architecture breakdown.
+See `src/app/page.tsx` or run the app to see the detailed architecture breakdown.
 
 ## Testing
 

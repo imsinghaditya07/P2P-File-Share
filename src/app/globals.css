@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -13,9 +13,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* SHAREit Blue (primary brand color) */
-    --primary: 217 91% 60%;
-    /* #2F80ED / Blue */
+    /* Apple Blue */
+    --primary: 211 100% 50%;
+    /* #007AFF */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -32,9 +32,9 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 211 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 1.5rem;
   }
 }
 
@@ -48,31 +48,30 @@
   }
 }
 
-/* Prompt custom styles override */
-/* Switch from dark hacker theme to clean light shareit theme */
+/* iCloud-like clean design */
 :root {
-  --bg: #ffffff;
-  --s1: #ffffff;
-  --s2: #f8fafc;
-  --border-custom: #e2e8f0;
-  --border2: #cbd5e1;
-  --a1: #3b82f6;
-  /* blue */
-  --a2: #f59e0b;
-  /* amber */
-  --a3: #ef4444;
-  /* red */
-  --a4: #8b5cf6;
-  /* violet */
-  --text: #334155;
-  --bright: #0f172a;
-  --dim: #64748b;
+  --text: #1d1d1f;
+  --bright: #000000;
+  --dim: #86868b;
 }
 
 body {
-  background-color: #f0f9ff;
-  /* Clean gradient background */
-  background-image: radial-gradient(at center top, #e0f2fe 0%, #f0f9ff 60%, #ffffff 100%);
-  background-repeat: no-repeat;
+  /* Apple-like mesh gradient background */
+  background-color: #f4f5f7;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, transparent 50%);
   background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
