@@ -1,0 +1,6 @@
+@echo off
+echo Starting Next.js Frontend...
+start cmd /k "npm run dev"
+
+echo Starting Python FastAPI Backend...
+start cmd /k "pip install -r requirements.txt && uvicorn api.index:app --reload --port 8000"
